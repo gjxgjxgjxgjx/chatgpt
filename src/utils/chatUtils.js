@@ -24,17 +24,8 @@ export function create_normal_message(inputValue, comments) {
   }));
 
   chatHistory.push({ role: "user", content: message });
+  return chatHistory;
 
-  return {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      model: "gpt-3.5-turbo",
-      messages: chatHistory
-    })
-  };
 }
 
 export function create_child_message(inputValue, comments) {
@@ -76,16 +67,8 @@ export function create_child_message(inputValue, comments) {
   chatHistory.push({ role: "user", content: message });
 
   sendContent = [introduction, introductionReply, ...chatHistory];
-  return {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      model: "gpt-3.5-turbo",
-      messages: sendContent
-    })
-  };
+
+  return sendContent;
 }
 
 export function create_unlimited_message(inputValue, comments) {
@@ -130,14 +113,5 @@ export function create_unlimited_message(inputValue, comments) {
     inductionReply
   ];
 
-  return {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      model: "gpt-3.5-turbo",
-      messages: sendContent
-    })
-  };
+  return sendContent;
 }

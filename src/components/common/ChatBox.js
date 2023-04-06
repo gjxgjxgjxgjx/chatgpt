@@ -4,11 +4,12 @@ import style from "./ChatBox.module.css";
 
 import { useState, useRef, useEffect } from "react";
 import { createMessage } from "../../utils/chatUtils";
+import {getAuthorizationHeader} from "./SecretKeyManager";
 
 export default function ChatBox(props) {
   const apiUrl = props.unlimited
-    ? "http://192.168.31.95:5000/send_message"
-    : "http://192.168.31.95:5000/send_message";
+    ? "https://api.openai.com/v1/chat/completions"
+    : "https://api.openai.com/v1/chat/completions";
 
   const initComments = {
     id: 1,
@@ -40,10 +41,23 @@ export default function ChatBox(props) {
   async function send_message(inputValue, systemComment) {
     const message = createMessage(inputValue, comments, props.chatType);
     try {
-      const response = await fetch(apiUrl, message);
+
+      const headers = {
+        "Content-Type": "application/json",
+        "Authorization": getAuthorizationHeader(),
+      };
+
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: message,
+        }),
+      });
 
       const data = await response.json();
-      let content = data.data.content;
+      let content = data.choices[0].message.content;
 
       // 使用函数式更新来保证获取到最新的 comments 状态值
       setComments((prevComments) => {

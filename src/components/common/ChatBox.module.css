@@ -1,0 +1,82 @@
+.container {
+  position: relative;
+  height: 100vh;
+  overflow: hidden; /* 隐藏滚动条 */
+}
+
+.ChatBoxWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 50px; /* 输入框高度为 50px */
+  overflow-y: scroll; /* 显示滚动条 */
+}
+
+.ChatBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.inputBoxWrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px; /* 输入框高度为 50px */
+  flex-shrink: 0;
+}
+
+.myComment,
+.otherComment {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.myComment {
+  justify-content: flex-end;
+}
+
+::-webkit-scrollbar {
+  width: 8px; /* 设置滚动条宽度 */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2); /* 设置滚动条颜色 */
+  border-radius: 4px; /* 设置滚动条圆角 */
+}
+
+.ChatBoxWrapper::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.5); /* 设置鼠标悬停时滚动条颜色 */
+}
+
+.ChatBoxWrapper::-webkit-scrollbar-thumb:active {
+  background-color: rgba(0, 0, 0, 0.2); /* 设置滚动条被激活时颜色 */
+}
+
+.ChatBoxWrapper::-webkit-scrollbar-thumb:vertical {
+  min-height: 20px; /* 设置垂直滚动条最小高度 */
+}
+
+.ChatBoxWrapper::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0); /* 设置滚动条背景颜色 */
+}
+
+.ChatBoxWrapper::-webkit-scrollbar-track:hover {
+  background-color: rgba(0, 0, 0, 0.2); /* 设置鼠标悬停时滚动条背景颜色 */
+}
+
+.ChatBoxWrapper::-webkit-scrollbar-track:active {
+  background-color: rgba(0, 0, 0, 0.3); /* 设置滚动条背景被激活时颜色 */
+}
+
+.ChatBoxWrapper::-webkit-scrollbar-thumb:vertical {
+  display: none; /* 设置垂直滚动条默认不显示 */
+}
+
+.ChatBoxWrapper:hover::-webkit-scrollbar-thumb:vertical {
+  display: block; /* 鼠标悬停时垂直滚动条显示 */
+}

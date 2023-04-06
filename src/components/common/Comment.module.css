@@ -1,0 +1,57 @@
+.Comment {
+  display: flex;
+  align-items: flex-start;
+  background-color: rgb(240, 240, 240);
+  padding-right: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  max-width: 70%;
+  word-wrap: break-word;
+}
+.CommentRevese {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row-reverse;
+  background-color: rgb(240, 240, 240);
+  border-radius: 5px;
+  padding-left: 10px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  max-width: 70%;
+  word-wrap: break-word;
+}
+
+.Avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin: 1px;
+  margin-top: 5px;
+}
+
+.name {
+  font-size: 14px;
+  font-weight: bold;
+  text-align: start;
+}
+.nameReverse {
+  font-size: 14px;
+  font-weight: bold;
+  text-align: end;
+}
+
+.date {
+  font-size: 10px; /* 调整字体大小 */
+  color: #888;
+}
+
+.dateReverse {
+  font-size: 10px; /* 调整字体大小 */
+  color: #888;
+  text-align: right;
+}
+
+.markdown-table {
+  overflow-x: auto;
+}

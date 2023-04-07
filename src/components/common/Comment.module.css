@@ -9,6 +9,7 @@
   max-width: 70%;
   word-wrap: break-word;
   overflow-wrap: break-word; /* 新增属性 */
+  word-break: break-all;
 }
 .CommentRevese {
   display: flex;
@@ -22,6 +23,7 @@
   max-width: 70%;
   word-wrap: break-word;
   overflow-wrap: break-word; /* 新增属性 */
+  word-break: break-all;
 }
 
 .Avatar {

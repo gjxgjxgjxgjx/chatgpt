@@ -8,6 +8,7 @@
   margin-top: 10px;
   max-width: 70%;
   word-wrap: break-word;
+  overflow-wrap: break-word; /* 新增属性 */
 }
 .CommentRevese {
   display: flex;
@@ -20,6 +21,7 @@
   margin-top: 10px;
   max-width: 70%;
   word-wrap: break-word;
+  overflow-wrap: break-word; /* 新增属性 */
 }
 
 .Avatar {
@@ -54,4 +56,8 @@
 
 .markdown-table {
   overflow-x: auto;
+}
+pre {
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
 }

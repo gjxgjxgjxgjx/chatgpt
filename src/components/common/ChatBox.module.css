@@ -4,9 +4,28 @@
   overflow: hidden; /* 隐藏滚动条 */
 }
 
-.ChatBoxWrapper {
+.topBar {
   position: absolute;
   top: 0;
+  left: 0;
+  right: 0;
+  height: 50px; /* 设置顶部栏高度 */
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  background-color: #f0f0f0; /* 设置顶部栏背景颜色 */
+  border: none; /* 移除边缘 */
+}
+
+.topBar i {
+  cursor: pointer;
+  font-size: 24px;
+  padding: 0 10px;
+}
+
+.ChatBoxWrapper {
+  position: absolute;
+  top: 50px; /* 顶部栏高度为 50px */
   left: 0;
   right: 0;
   bottom: 50px; /* 输入框高度为 50px */

@@ -97,7 +97,8 @@ export default function ChatBox(props) {
   }
 
   async function send_message_stream(inputValue,preComments, systemCommentId) {
-    const streamApiUrl = "https://flask-gpt-mjdg.vercel.app/chat_stream"
+    // const streamApiUrl = "https://flask-gpt-mjdg.vercel.app/chat_stream"
+    const streamApiUrl = "http://127.0.0.1:5000/chat_stream"
     const message = JSON.stringify(createMessage(inputValue, comments.slice(1), props.chatType));
     const source = new EventSource(streamApiUrl + `?message=${encodeURIComponent(message)}&api_key=${encodeURIComponent(getAuthorizationHeader())}`, {
       withCredentials: false,
@@ -140,11 +141,11 @@ export default function ChatBox(props) {
 
     source.onerror = function () {
       source.close();
-      let content = "错误，请重试";
-
-      const updatedComments =[...newComments]
-      updatedComments[index].text = content;
-      setComments(updatedComments)
+      // let content = "错误，请重试";
+      //
+      // const updatedComments =[...newComments]
+      // updatedComments[index].text = content;
+      // setComments(updatedComments)
     };
   }
 

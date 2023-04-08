@@ -6,6 +6,7 @@ import { useState, useRef, useEffect } from "react";
 import { createMessage } from "../../utils/chatUtils";
 import { getAuthorizationHeader } from "./SecretKeyManager";
 
+
 export default function ChatBox(props) {
   const apiUrl = props.unlimited
     ? "https://api.openai.com/v1/chat/completions"
@@ -24,6 +25,8 @@ export default function ChatBox(props) {
   const [comments, setComments] = useState([initComments]);
   const [messageId, setMessageId] = useState(1);
   const chatBoxRef = useRef(null);
+  const useStream = localStorage.getItem("useStream") === "true";
+
   useEffect(() => {
     if (chatBoxRef.current) {
       scrollToBottom();
@@ -37,8 +40,28 @@ export default function ChatBox(props) {
     });
   }
 
-  async function send_message(inputValue, systemComment) {
-    const message = createMessage(inputValue, comments, props.chatType);
+  async function send_message(inputValue,preComments, systemCommentId) {
+    const message = createMessage(inputValue, comments.slice(1), props.chatType);
+
+    const systemComment = {
+      id: systemCommentId,
+      isMe: false,
+      isSystem: true,
+      date: new Date(),
+      text: "正在打字中！\n",
+      author: {
+        name: "小星星",
+        avatarUrl: "https://placekitten.com/g/64/64",
+      },
+    };
+    const newComments = preComments.slice()
+    newComments.push(systemComment);
+    setComments(newComments);
+
+    const index = newComments.findIndex(
+        (comment) => comment.id === systemComment.id
+    );
+
     try {
       const headers = {
         "Content-Type": "application/json",
@@ -57,23 +80,74 @@ export default function ChatBox(props) {
       const data = await response.json();
       let content = data.choices[0].message.content;
 
-      // 使用函数式更新来保证获取到最新的 comments 状态值
-      setComments((prevComments) => {
-        const updatedComments = [...prevComments];
-        const index = updatedComments.findIndex(
-          (comment) => comment.id === systemComment.id
-        );
-        console.debug(prevComments);
-        updatedComments[index].text = content;
+      const updatedComments =[...newComments]
+      updatedComments[index].text = content;
+      setComments(updatedComments)
 
-        return updatedComments;
-      });
 
       console.debug(content);
     } catch (error) {
       console.error(error);
+      let content = "错误，请重试";
+
+      const updatedComments =[...newComments]
+      updatedComments[index].text = content;
+      setComments(updatedComments)
     }
   }
+
+  async function send_message_stream(inputValue,preComments, systemCommentId) {
+    const streamApiUrl = "https://flask-gpt-six.vercel.app/chat_stream"
+    const message = JSON.stringify(createMessage(inputValue, comments.slice(1), props.chatType));
+    const source = new EventSource(streamApiUrl + `?message=${encodeURIComponent(message)}&api_key=${encodeURIComponent(getAuthorizationHeader())}`, {
+      withCredentials: false,
+      bufferSize: 1024 * 1024
+    });
+
+
+    const systemComment = {
+      id: systemCommentId,
+      isMe: false,
+      isSystem: true,
+      date: new Date(),
+      text: "好的！",
+      author: {
+        name: "小星星",
+        avatarUrl: "https://placekitten.com/g/64/64",
+      },
+    };
+    const newComments = preComments.slice()
+    newComments.push(systemComment);
+    setComments(newComments);
+
+    const index = newComments.findIndex(
+        (comment) => comment.id === systemComment.id
+    );
+
+
+    source.onmessage = function (event) {
+      const data = JSON.parse(event.data);
+      const content = data.text;
+
+      console.log("pre"+newComments[index].text)
+      console.log(content)
+
+      const updatedComments =[...newComments]
+      updatedComments[index].text += content;
+      setComments(updatedComments)
+
+    };
+
+    source.onerror = function () {
+      source.close();
+      let content = "错误，请重试";
+
+      const updatedComments =[...newComments]
+      updatedComments[index].text = content;
+      setComments(updatedComments)
+    };
+  }
+
   function onSendClicked(inputValue) {
     const id = messageId + 1;
     setMessageId(id);
@@ -94,7 +168,7 @@ export default function ChatBox(props) {
       isMe: false,
       isSystem: true,
       date: new Date(),
-      text: "稍等一下，我正在努力打字哦！",
+      text: "好的！",
       author: {
         name: "小星星",
         avatarUrl: "https://placekitten.com/g/64/64",
@@ -102,12 +176,14 @@ export default function ChatBox(props) {
     };
     newComments.push(comment);
     setComments([...newComments]);
-    newComments.push(systemComment);
-    setTimeout(() => {
-      setComments(newComments);
-    }, 300);
+    // newComments.push(systemComment);
+    // setComments(newComments);
 
-    send_message(inputValue, systemComment);
+    if (!useStream){
+      send_message(inputValue, newComments,id);
+    }else{
+      send_message_stream(inputValue,newComments,id);
+    }
   }
 
   return (
@@ -115,7 +191,7 @@ export default function ChatBox(props) {
       <div className={style.container}>
         <div className={style.topBar}>
           <button onClick={() => window.history.back()}>返回</button>
-        </div>x 
+        </div>
         <div ref={chatBoxRef} className={style.ChatBoxWrapper}>
           <div className={style.ChatBox}>
             {comments.map((comment, index) => {

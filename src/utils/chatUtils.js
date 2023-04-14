@@ -5,6 +5,8 @@ export function createMessage(inputValue, comments, chatType) {
       return create_unlimited_message(inputValue, comments);
     case "child":
       return create_child_message(inputValue, comments);
+    case "test-case":
+      return create_testcase(inputValue, comments);
     default:
       return create_normal_message(inputValue, comments);
   }
@@ -110,6 +112,54 @@ export function create_unlimited_message(inputValue, comments) {
     ...chatHistory,
     induction,
     inductionReply,
+  ];
+
+  return sendContent;
+}
+
+export function create_testcase(inputValue, comments) {
+  const introduction = {
+    role: "system",
+    content:
+      "你作为一个高级测试工程师，需要根据提供的产品需求文档来写测试用例，" +
+      "你会以专业测试的角度去对需求文档中所有的预期结果进行测试覆盖，并且你凭借专业的经验和思考来覆盖需求文档中未提及但需要去测试的部分。" +
+      "测试用例会直接以无序号列表形式返回一个思维导图，具有层次关系。根据测试用例的优先级为每一条后面加上" +
+      "[P0,P1,P2]，P0表示主流程冒烟测试必须通过，P1表示关键功能不符合预期，P2表示功能正常但是用户体验较差，需要保证返回内容包含P0,P1,P2的所有测试用例。输出格式可以参考下面：" +
+      "\n" +
+      "- 测试用例\n" +
+      "  - 测试用例\n" +
+      "    - 测试用例\n" +
+      "      - 测试用例\n" +
+      "        - 预期结果[P0或P1或P2]" +
+      "\n最后，你还需要对需求中需要补充和确认的地方给出提醒，列出测试执行中可能出问题的点，并给出需求可能对其他功能的影响范围回归建议",
+  };
+  // const introductionQuestion = { role: "user", content: "记住了吗" };
+  const introductionReply = {
+    role: "assistant",
+    content:
+      "请您发送需求文档内容，我将以您提出的要求直接输出测试用例，测试用例会以markdown格式中的无序号列表形式返回一个思维导图（标题和正文都用无序列表）。输出格式参考：" +
+      "\n" +
+      "- 测试用例\n" +
+      "  - 测试用例\n" +
+      "    - 测试用例\n" +
+      "      - 测试用例\n" +
+      "        - 预期结果",
+  };
+
+  // 将用户消息添加到聊天历史中
+  var sendContent = [];
+  // 将用户消息添加到聊天历史中
+  const chatHistory = comments.map((comment) => ({
+    role: comment.isMe ? "user" : "assistant",
+    content: comment.text,
+  }));
+
+  chatHistory.push({ role: "user", content: inputValue });
+  sendContent = [
+    introduction,
+    // introductionQuestion,
+    // introductionReply,
+    ...chatHistory,
   ];
 
   return sendContent;

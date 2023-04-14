@@ -2,7 +2,7 @@
   position: relative;
   height: 100vh;
   overflow: hidden; /* 隐藏滚动条 */
-  width: 1000px;
+  max-width: 1000px;
   margin: 0 auto; /* 设置左右边距为自动，即可实现居中对齐 */
   background-color: #fbfbfb;
   height: calc(100vh - 80px);
@@ -50,7 +50,7 @@
   right: 0;
   height: 50px; /* 输入框高度为 50px */
   flex-shrink: 0;
-  width: 1000px;
+  max-width: 1000px;
   margin: 0 auto; /* 设置左右边距为自动，即可实现居中对齐 */
 }
 

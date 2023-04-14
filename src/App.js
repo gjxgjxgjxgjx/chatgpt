@@ -21,26 +21,24 @@ export default function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <div className="content-container">
-          <Sidebar
-            useStream={useStream}
-            handleUseStreamChange={handleUseStreamChange}
-          />
-          <Routes>
-            <Route index element={<Navigate to="/normal" />} />
+        <Sidebar
+          useStream={useStream}
+          handleUseStreamChange={handleUseStreamChange}
+        />
+        <Routes>
+          <Route index element={<Navigate to="/normal" />} />
 
-            <Route path="/normal" element={<ChatBox chatType={"normal"} />} />
-            <Route path="/child" element={<ChatBox chatType={"child"} />} />
-            <Route
-              path="/unlimited"
-              element={<ChatBox chatType={"unlimited"} />}
-            />
-            <Route
-              path="/test-case"
-              element={<ChatBox chatType={"test-case"} />}
-            />
-          </Routes>
-        </div>
+          <Route path="/normal" element={<ChatBox chatType={"normal"} />} />
+          <Route path="/child" element={<ChatBox chatType={"child"} />} />
+          <Route
+            path="/unlimited"
+            element={<ChatBox chatType={"unlimited"} />}
+          />
+          <Route
+            path="/test-case"
+            element={<ChatBox chatType={"test-case"} />}
+          />
+        </Routes>
       </BrowserRouter>
     </div>
   );

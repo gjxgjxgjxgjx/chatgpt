@@ -2,18 +2,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import SecretKeyManager from "./SecretKeyManager";
 const Sidebar = ({ useStream, handleUseStreamChange }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
     <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
-      <button onClick={toggleSidebar} className="sidebar-toggle">
-        {sidebarOpen ? "关闭" : "展开"}
-      </button>
-      {sidebarOpen && (
+      {
         <>
           <nav>
             <ul>
@@ -41,7 +34,7 @@ const Sidebar = ({ useStream, handleUseStreamChange }) => {
           </label>
           <SecretKeyManager />
         </>
-      )}
+      }
     </div>
   );
 };

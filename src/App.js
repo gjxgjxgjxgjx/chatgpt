@@ -21,13 +21,18 @@ export default function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Sidebar
-          useStream={useStream}
-          handleUseStreamChange={handleUseStreamChange}
-        />
         <Routes>
-          <Route index element={<Navigate to="/normal" />} />
-
+          <Route
+            path="/"
+            element={
+              <div>
+                <Sidebar
+                  useStream={useStream}
+                  handleUseStreamChange={handleUseStreamChange}
+                />
+              </div>
+            }
+          />
           <Route path="/normal" element={<ChatBox chatType={"normal"} />} />
           <Route path="/child" element={<ChatBox chatType={"child"} />} />
           <Route

@@ -2,6 +2,7 @@ import Comment from "./Comment";
 import InputBox from "./InputBox";
 import style from "./ChatBox.module.css";
 
+import sendMessage from "../../services/api";
 import { useState, useRef, useEffect } from "react";
 import { createMessage } from "../../utils/chatUtils";
 import { getAuthorizationHeader } from "./SecretKeyManager";
@@ -99,6 +100,45 @@ export default function ChatBox(props) {
   }
 
   async function send_message_stream(inputValue, preComments, systemCommentId) {
+    const systemComment = {
+      id: systemCommentId,
+      isMe: false,
+      isSystem: true,
+      date: new Date(),
+      text: "好的！",
+      author: {
+        name: "小星星",
+        avatarUrl: "https://placekitten.com/g/64/64",
+      },
+    };
+    const newComments = preComments.slice();
+    newComments.push(systemComment);
+    setComments(newComments);
+
+    const index = newComments.findIndex(
+      (comment) => comment.id === systemComment.id
+    );
+
+    const message = createMessage(
+      inputValue,
+      comments.slice(1),
+      props.chatType
+    );
+
+    sendMessage(message, (content) => {
+      console.log("pre" + newComments[index].text);
+      console.log(content);
+
+      const updatedComments = [...newComments];
+      updatedComments[index].text += content;
+      setComments(updatedComments);
+    });
+  }
+  async function send_message_stream1(
+    inputValue,
+    preComments,
+    systemCommentId
+  ) {
     const streamApiUrl = "https://flask-gpt-mjdg.vercel.app/chat_stream";
     // const streamApiUrl = "http://127.0.0.1:5000/chat_stream"
     const message = JSON.stringify(
@@ -198,7 +238,18 @@ export default function ChatBox(props) {
     <>
       <div className={style.container}>
         <div className={style.topBar}>
-          <button onClick={() => window.history.back()}>返回</button>
+          <button
+            onClick={() => {
+              if (window.location.pathname === "/") {
+                window.history.back();
+              } else {
+                window.location.href = "/";
+              }
+            }}
+          >
+            返回
+          </button>
+
           <p
             style={{
               display: "flex",

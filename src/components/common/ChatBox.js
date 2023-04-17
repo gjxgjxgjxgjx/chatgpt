@@ -8,9 +8,7 @@ import { createMessage } from "../../utils/chatUtils";
 import { getAuthorizationHeader } from "./SecretKeyManager";
 
 export default function ChatBox(props) {
-  const apiUrl = props.unlimited
-    ? "https://api.openai.com/v1/chat/completions"
-    : "https://api.openai.com/v1/chat/completions";
+  const apiUrl = "https://api.openai.com/v1/chat/completions";
 
   const initComments = {
     id: 1,
@@ -45,9 +43,14 @@ export default function ChatBox(props) {
     // 否则返回存储的comments
     return storedComments;
   }
+
+  const historys = getStoredComments();
+  const lastComment = historys[historys.length - 1];
+  const lastCommentId = lastComment.id;
+
   // const [comments, setComments] = useState([initComments]);
-  const [comments, setComments] = useState(getStoredComments());
-  const [messageId, setMessageId] = useState(1);
+  const [comments, setComments] = useState(historys);
+  const [messageId, setMessageId] = useState(lastCommentId + 1);
   const chatBoxRef = useRef(null);
   const useStream = localStorage.getItem("useStream") === "true";
 
@@ -112,6 +115,12 @@ export default function ChatBox(props) {
       updatedComments[index].text = content;
       setComments(updatedComments);
 
+      // 将更新后的comments存储在本地
+      localStorage.setItem(
+        "comments" + props.chatType,
+        JSON.stringify(updatedComments)
+      );
+
       console.debug(content);
     } catch (error) {
       console.error(error);
@@ -120,6 +129,11 @@ export default function ChatBox(props) {
       const updatedComments = [...newComments];
       updatedComments[index].text = content;
       setComments(updatedComments);
+      // 将更新后的comments存储在本地
+      localStorage.setItem(
+        "comments" + props.chatType,
+        JSON.stringify(updatedComments)
+      );
     }
   }
 

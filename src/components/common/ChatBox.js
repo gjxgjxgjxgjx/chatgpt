@@ -22,7 +22,31 @@ export default function ChatBox(props) {
       avatarUrl: "https://placekitten.com/g/64/64",
     },
   };
-  const [comments, setComments] = useState([initComments]);
+  function getStoredComments() {
+    // 从本地存储中获取comments
+    function parseCommentDates(comments) {
+      for (let comment of comments) {
+        if (comment.date) {
+          comment.date = new Date(comment.date); // 将日期字符串转换为日期对象
+        }
+      }
+      return comments;
+    }
+
+    const storedCommentsNodates = JSON.parse(
+      localStorage.getItem("comments" + props.chatType)
+    );
+    // 如果存储的comments不存在，则返回一个空的列表
+    if (!storedCommentsNodates) {
+      return [initComments];
+    }
+    const storedComments = parseCommentDates(storedCommentsNodates);
+
+    // 否则返回存储的comments
+    return storedComments;
+  }
+  // const [comments, setComments] = useState([initComments]);
+  const [comments, setComments] = useState(getStoredComments());
   const [messageId, setMessageId] = useState(1);
   const chatBoxRef = useRef(null);
   const useStream = localStorage.getItem("useStream") === "true";
@@ -125,75 +149,25 @@ export default function ChatBox(props) {
       props.chatType
     );
 
-    sendMessage(message, (content) => {
-      console.log("pre" + newComments[index].text);
-      console.log(content);
+    sendMessage(
+      message,
+      (content) => {
+        console.log("pre" + newComments[index].text);
+        console.log(content);
 
-      const updatedComments = [...newComments];
-      updatedComments[index].text += content;
-      setComments(updatedComments);
-    });
-  }
-  async function send_message_stream1(
-    inputValue,
-    preComments,
-    systemCommentId
-  ) {
-    const streamApiUrl = "https://flask-gpt-mjdg.vercel.app/chat_stream";
-    // const streamApiUrl = "http://127.0.0.1:5000/chat_stream"
-    const message = JSON.stringify(
-      createMessage(inputValue, comments.slice(1), props.chatType)
-    );
-    const source = new EventSource(
-      streamApiUrl +
-        `?message=${encodeURIComponent(message)}&api_key=${encodeURIComponent(
-          getAuthorizationHeader()
-        )}`,
-      {
-        withCredentials: false,
-        bufferSize: 1024 * 1024,
+        const updatedComments = [...newComments];
+        updatedComments[index].text += content;
+        setComments(updatedComments);
+      },
+      () => {
+        console.log("完成，将存储在本地");
+        // 将更新后的comments存储在本地
+        localStorage.setItem(
+          "comments" + props.chatType,
+          JSON.stringify(newComments)
+        );
       }
     );
-
-    const systemComment = {
-      id: systemCommentId,
-      isMe: false,
-      isSystem: true,
-      date: new Date(),
-      text: "好的！",
-      author: {
-        name: "小星星",
-        avatarUrl: "https://placekitten.com/g/64/64",
-      },
-    };
-    const newComments = preComments.slice();
-    newComments.push(systemComment);
-    setComments(newComments);
-
-    const index = newComments.findIndex(
-      (comment) => comment.id === systemComment.id
-    );
-
-    source.onmessage = function (event) {
-      const data = JSON.parse(event.data);
-      const content = data.text;
-
-      console.log("pre" + newComments[index].text);
-      console.log(content);
-
-      const updatedComments = [...newComments];
-      updatedComments[index].text += content;
-      setComments(updatedComments);
-    };
-
-    source.onerror = function () {
-      source.close();
-      // let content = "错误，请重试";
-      //
-      // const updatedComments =[...newComments]
-      // updatedComments[index].text = content;
-      // setComments(updatedComments)
-    };
   }
 
   function onSendClicked(inputValue) {
@@ -211,21 +185,8 @@ export default function ChatBox(props) {
     };
     const newComments = comments.slice();
 
-    const systemComment = {
-      id: id,
-      isMe: false,
-      isSystem: true,
-      date: new Date(),
-      text: "好的！",
-      author: {
-        name: "小星星",
-        avatarUrl: "https://placekitten.com/g/64/64",
-      },
-    };
     newComments.push(comment);
     setComments([...newComments]);
-    // newComments.push(systemComment);
-    // setComments(newComments);
 
     if (!useStream) {
       send_message(inputValue, newComments, id);
@@ -239,6 +200,12 @@ export default function ChatBox(props) {
       <div className={style.container}>
         <div className={style.topBar}>
           <button
+            style={{
+              display: "flex",
+              justifyContent: "left",
+
+              whiteSpace: "nowrap",
+            }}
             onClick={() => {
               if (window.location.pathname === "/") {
                 window.history.back();
@@ -254,11 +221,25 @@ export default function ChatBox(props) {
             style={{
               display: "flex",
               justifyContent: "center",
-              width: "100vh", //设置容器宽度为视口高度，以使水平居中生效
+              width: "100vw", //设置容器宽度为视口高度，以使水平居中生效
             }}
           >
             当前模式：{props.chatType}
           </p>
+
+          <button
+            style={{
+              display: "flex",
+              justifyContent: "right",
+              whiteSpace: "nowrap",
+            }}
+            onClick={() => {
+              localStorage.removeItem("comments" + props.chatType);
+              setComments([]);
+            }}
+          >
+            清空消息
+          </button>
         </div>
         <div ref={chatBoxRef} className={style.ChatBoxWrapper}>
           <div className={style.ChatBox}>

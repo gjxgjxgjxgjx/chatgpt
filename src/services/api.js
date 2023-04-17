@@ -1,6 +1,6 @@
 import { getAuthorizationHeader } from "../components/common/SecretKeyManager";
 
-async function sendMessage(message, onmessage) {
+async function sendMessage(message, onmessage, onfinish) {
   const apiUrl = "https://api.openai.com/v1/chat/completions";
   const headers = {
     "Content-Type": "application/json",
@@ -43,7 +43,7 @@ async function sendMessage(message, onmessage) {
         const line = lines[i];
 
         if (line === "data: [DONE]") {
-          console.log("Chat session ended.");
+          onfinish();
           return;
         }
 

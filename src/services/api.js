@@ -1,5 +1,11 @@
 import { getAuthorizationHeader } from "../components/common/SecretKeyManager";
 
+function decodeHtml(html) {
+  var txt = document.createElement("textarea");
+  txt.innerHTML = html;
+  return txt.value;
+}
+
 async function sendMessage(message, onmessage, onfinish) {
   const apiUrl = "https://api.openai.com/v1/chat/completions";
   const headers = {
@@ -47,21 +53,23 @@ async function sendMessage(message, onmessage, onfinish) {
           return;
         }
 
-        const pattern = /"content":"(.+?)"/;
-        const match = line.match(pattern);
-
-        if (match) {
-          const content = match[1]
-            .replace(/\\n/g, "\n")
-            .replace(/\\t/g, "\t")
-            .replace(/\\r/g, "\r")
-            .replace(/\\b/g, "\b")
-            .replace(/\\f/g, "\f")
-            .replace(/\\'/g, "'")
-            .replace(/\\"/g, '"')
-            .replace(/\\\\/g, "\\");
-          console.log(content);
-          onmessage(content);
+        // 修改了这里，尝试解析整行数据
+        const jsonLine = line.replace("data: ", "");
+        try {
+          const parsedData = JSON.parse(jsonLine);
+          if (
+            parsedData.choices &&
+            parsedData.choices[0] &&
+            parsedData.choices[0].delta &&
+            parsedData.choices[0].delta.content
+          ) {
+            let content = parsedData.choices[0].delta.content;
+            // content = decodeHtml(content);
+            console.log(content);
+            onmessage(content);
+          }
+        } catch (error) {
+          console.log(`解析JSON数据时出错: ${error}`);
         }
       }
       chunk = lines[lines.length - 1];

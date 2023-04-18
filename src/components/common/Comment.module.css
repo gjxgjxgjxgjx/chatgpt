@@ -6,7 +6,7 @@
   border-radius: 5px;
   margin-bottom: 10px;
   margin-top: 10px;
-  max-width: 70%;
+  max-width: 95%;
   word-wrap: break-word;
   overflow-wrap: break-word; /* 新增属性 */
   word-break: break-all;
@@ -20,7 +20,7 @@
   padding-left: 10px;
   margin-bottom: 10px;
   margin-top: 10px;
-  max-width: 70%;
+  max-width: 95%;
   word-wrap: break-word;
   overflow-wrap: break-word; /* 新增属性 */
   word-break: break-all;
@@ -62,4 +62,20 @@
 pre {
   overflow-wrap: break-word;
   white-space: pre-wrap;
+  position: relative;
+  background-color: white;
+}
+
+.copyBottn {
+  position: absolute;
+  right: 10px;
+  top: 1em;
+  cursor: pointer;
+  padding: 0px 5px;
+  background-color: white;
+  border-radius: 10px;
+  pointer-events: none;
+  content: "copy";
+  opacity: 1;
+  pointer-events: all;
 }

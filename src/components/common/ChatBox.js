@@ -171,6 +171,11 @@ export default function ChatBox(props) {
 
         const updatedComments = [...newComments];
         updatedComments[index].text += content;
+
+        // updatedComments[index].text = JSON.parse(
+        //   `"${updatedComments[index].text}"`
+        // );
+
         setComments(updatedComments);
       },
       () => {

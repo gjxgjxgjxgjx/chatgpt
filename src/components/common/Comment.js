@@ -51,37 +51,38 @@ export function PreCode(props) {
 }
 
 async function copyToClipboard(text) {
-  try {
-    const permissionStatus = await navigator.permissions.query({
-      name: "clipboard-write",
-    });
-    if (
-      permissionStatus.state === "granted" ||
-      permissionStatus.state === "prompt"
-    ) {
-      /* 执行复制粘贴操作 */
-      if (navigator.clipboard) {
-        await navigator.clipboard.writeText(text);
+  // 使用 navigator.clipboard.writeText，如果可用
+  if (
+    navigator.clipboard &&
+    typeof navigator.clipboard.writeText === "function"
+  ) {
+    try {
+      await navigator.clipboard.writeText(text);
+      console.log("Text copied to clipboard");
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    }
+  } else {
+    // 降级到 document.execCommand('copy')，如果 navigator.clipboard 不可用
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed"; // 避免在页面上滚动
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+
+    try {
+      const successful = document.execCommand("copy");
+      if (successful) {
         console.log("Text copied to clipboard");
       } else {
-        const textArea = document.createElement("textarea");
-        textArea.value = text;
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        try {
-          document.execCommand("copy");
-          console.log("Text copied to clipboard");
-        } catch (err) {
-          console.error("Failed to copy: ", err);
-        }
-        document.body.removeChild(textArea);
+        console.error("Failed to copy text");
       }
-    } else {
-      console.error("Permission to access clipboard denied");
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    } finally {
+      document.body.removeChild(textarea);
     }
-  } catch (err) {
-    console.error("Permission query failed: ", err);
   }
 }
 

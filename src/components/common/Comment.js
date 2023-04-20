@@ -39,37 +39,49 @@ export function PreCode(props) {
         className={styles.copyBottn}
         onClick={() => {
           if (ref.current) {
-            const code = ref.current.innerText;
-            const codeWithoutCopyText = code.substring(2); // 删除前两个字符，即 "复制" 两字
-            copyToClipboard(codeWithoutCopyText);
+            let code = ref.current.innerText;
+            // code = code.substring(2); // 删除前两个字符，即 "复制" 两字
+            copyToClipboard(code);
           }
         }}
-      >
-        复制
-      </button>
+      ></button>
       {props.children}
     </pre>
   );
 }
 
-export async function copyToClipboard(text) {
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).catch((err) => {
-      console.error("Failed to copy: ", err);
+async function copyToClipboard(text) {
+  try {
+    const permissionStatus = await navigator.permissions.query({
+      name: "clipboard-write",
     });
-  } else {
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    try {
-      document.execCommand("copy");
-      console.log("Text copied to clipboard");
-    } catch (err) {
-      console.error("Failed to copy: ", err);
+    if (
+      permissionStatus.state === "granted" ||
+      permissionStatus.state === "prompt"
+    ) {
+      /* 执行复制粘贴操作 */
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(text);
+        console.log("Text copied to clipboard");
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          document.execCommand("copy");
+          console.log("Text copied to clipboard");
+        } catch (err) {
+          console.error("Failed to copy: ", err);
+        }
+        document.body.removeChild(textArea);
+      }
+    } else {
+      console.error("Permission to access clipboard denied");
     }
-    document.body.removeChild(textArea);
+  } catch (err) {
+    console.error("Permission query failed: ", err);
   }
 }
 

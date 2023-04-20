@@ -63,19 +63,24 @@ pre {
   overflow-wrap: break-word;
   white-space: pre-wrap;
   position: relative;
+  min-width: 100px;
+  min-height: 20px;
   background-color: white;
 }
 
 .copyBottn {
   position: absolute;
-  right: 10px;
-  top: 1em;
+  right: 0px;
   cursor: pointer;
   padding: 0px 5px;
   background-color: white;
   border-radius: 10px;
-  pointer-events: none;
-  content: "copy";
-  opacity: 1;
   pointer-events: all;
+}
+.copyBottn:hover {
+  background-color: gray;
+}
+
+.copyBottn::before {
+  content: "copy";
 }

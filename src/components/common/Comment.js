@@ -40,7 +40,6 @@ export function PreCode(props) {
         onClick={() => {
           if (ref.current) {
             let code = ref.current.innerText;
-            // code = code.substring(2); // 删除前两个字符，即 "复制" 两字
             copyToClipboard(code);
           }
         }}

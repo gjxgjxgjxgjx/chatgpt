@@ -1,11 +1,13 @@
 import Comment from "./Comment";
 import InputBox from "./InputBox";
 import style from "./ChatBox.module.css";
-
+import { Button } from "antd";
 import sendMessage from "../../services/api";
 import { useState, useRef, useEffect } from "react";
 import { createMessage } from "../../utils/chatUtils";
 import { getAuthorizationHeader } from "./SecretKeyManager";
+import ModeSelector from "./ModeSelector";
+import SettingDrower from "./SettingDrower";
 
 export default function ChatBox(props) {
   const apiUrl = "https://api.openai.com/v1/chat/completions";
@@ -218,7 +220,8 @@ export default function ChatBox(props) {
     <>
       <div className={style.container}>
         <div className={style.topBar}>
-          <button
+          <SettingDrower />
+          {/* <button
             style={{
               display: "flex",
               justifyContent: "left",
@@ -234,19 +237,20 @@ export default function ChatBox(props) {
             }}
           >
             返回
-          </button>
+          </button> */}
 
-          <p
+          <div
             style={{
               display: "flex",
               justifyContent: "center",
               width: "100vw", //设置容器宽度为视口高度，以使水平居中生效
             }}
           >
-            当前模式：{props.chatType}
-          </p>
+            当前模式：
+            <ModeSelector label={props.chatType} />
+          </div>
 
-          <button
+          <Button
             style={{
               display: "flex",
               justifyContent: "right",
@@ -258,7 +262,7 @@ export default function ChatBox(props) {
             }}
           >
             清空消息
-          </button>
+          </Button>
         </div>
         <div ref={chatBoxRef} className={style.ChatBoxWrapper}>
           <div className={style.ChatBox}>

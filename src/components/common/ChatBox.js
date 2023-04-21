@@ -61,7 +61,7 @@ export default function ChatBox(props) {
     if (chatBoxRef.current) {
       scrollToBottom();
     }
-  }, [comments]);
+  }, [comments.length]);
 
   function scrollToBottom() {
     chatBoxRef.current.scrollTo({
@@ -226,23 +226,6 @@ export default function ChatBox(props) {
       <div className={style.container}>
         <div className={style.topBar}>
           <SettingDrower />
-          {/* <button
-            style={{
-              display: "flex",
-              justifyContent: "left",
-
-              whiteSpace: "nowrap",
-            }}
-            onClick={() => {
-              if (window.location.pathname === "/") {
-                window.history.back();
-              } else {
-                window.location.href = "/";
-              }
-            }}
-          >
-            返回
-          </button> */}
 
           <div
             style={{

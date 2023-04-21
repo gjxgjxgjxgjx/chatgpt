@@ -3,9 +3,9 @@
   height: 100vh;
   overflow: hidden; /* 隐藏滚动条 */
   max-width: 1000px;
+  bottom: 1px;
   margin: 0 auto; /* 设置左右边距为自动，即可实现居中对齐 */
   background-color: #fbfbfb;
-  height: calc(100vh - 80px);
 }
 
 .topBar {
@@ -13,7 +13,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 50px; /* 设置顶部栏高度 */
+  height: 5vh; /* 设置顶部栏高度 */
   display: flex;
   align-items: center;
   padding-left: 10px;
@@ -29,10 +29,10 @@
 
 .ChatBoxWrapper {
   position: absolute;
-  top: 50px; /* 为顶部预留空间 */
+  top: 5vh; /* 为顶部预留空间 */
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: 10vh;
   overflow-y: scroll; /* 显示滚动条 */
 }
 
@@ -45,10 +45,10 @@
 
 .inputBoxWrapper {
   position: fixed;
-  bottom: 30px;
   left: 0;
   right: 0;
-  height: 50px; /* 输入框高度为 50px */
+  bottom: 1px; /* 根据导航栏高度调整，留出足够的空间 */
+  height: 10vh; /* 输入框高度为 50px */
   flex-shrink: 0;
   max-width: 1000px;
   margin: 0 auto; /* 设置左右边距为自动，即可实现居中对齐 */

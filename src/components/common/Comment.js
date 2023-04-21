@@ -6,8 +6,10 @@ import RemarkBreaks from "remark-breaks";
 import RehypeKatex from "rehype-katex";
 import RemarkGfm from "remark-gfm";
 import RehypeHighlight from "rehype-highlight";
-
+import { CopyOutlined } from "@ant-design/icons";
+CopyOutlined;
 import { useRef } from "react";
+import { Button } from "antd";
 
 function formatDate(date) {
   const now = new Date();
@@ -85,9 +87,12 @@ async function copyToClipboard(text) {
   }
 }
 
-function Comment({ comment }) {
+function Comment({ comment, onCopyClick }) {
   return (
-    <>
+    <div>
+      <button onClick={() => onCopyClick(comment.text)}>
+        <CopyOutlined />
+      </button>
       <div className={comment.isMe ? styles.CommentRevese : styles.Comment}>
         <img
           className={styles.Avatar}
@@ -129,7 +134,7 @@ function Comment({ comment }) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./InputBox.module.css";
 
 export default function InputBox(props) {
   const [inputValue, setInputValue] = useState("");
+  useEffect(() => {
+    if (props.pasteContent) {
+      setInputValue(props.pasteContent);
+    }
+  }, [props.pasteContent]);
 
   const handleChange = (e) => {
     setInputValue(e.target.value);

@@ -10,6 +10,7 @@ import ModeSelector from "./ModeSelector";
 import SettingDrower from "./SettingDrower";
 
 export default function ChatBox(props) {
+  const [pasteContent, setPasteContent] = useState("");
   const apiUrl = "https://api.openai.com/v1/chat/completions";
 
   const initComments = {
@@ -216,6 +217,10 @@ export default function ChatBox(props) {
     }
   }
 
+  function handleCopyClick(text) {
+    console.log("点击了复制按钮");
+    setPasteContent(text);
+  }
   return (
     <>
       <div className={style.container}>
@@ -272,7 +277,7 @@ export default function ChatBox(props) {
                 : style.otherComment;
               return (
                 <div key={comment.id + 1} className={className}>
-                  <Comment comment={comment} />
+                  <Comment comment={comment} onCopyClick={handleCopyClick} />
                 </div>
               );
             })}
@@ -280,7 +285,7 @@ export default function ChatBox(props) {
         </div>
       </div>
       <div className={style.inputBoxWrapper}>
-        <InputBox onClick={onSendClicked} />
+        <InputBox onClick={onSendClicked} pasteContent={pasteContent} />
       </div>
     </>
   );

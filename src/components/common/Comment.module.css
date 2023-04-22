@@ -84,3 +84,6 @@ pre {
 .copyBottn::before {
   content: "copy";
 }
+.centeredToastText {
+  background-color: transparent !important;
+}

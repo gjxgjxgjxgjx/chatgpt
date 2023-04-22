@@ -3,6 +3,7 @@ import styles from "./InputBox.module.css";
 
 export default function InputBox(props) {
   const [inputValue, setInputValue] = useState("");
+
   useEffect(() => {
     if (props.pasteContent) {
       setInputValue(props.pasteContent);
@@ -32,14 +33,14 @@ export default function InputBox(props) {
   return (
     <div className={styles.InputBox}>
       <textarea
-        className={styles.InputBox.textarea}
+        className={styles.InputBox_textarea}
         type="text"
         value={inputValue}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         placeholder="请输入聊天内容"
       />
-      <button className={styles.InputBox.button} onClick={handleClick}>
+      <button className={styles.InputBox_button} onClick={handleClick}>
         发送
       </button>
     </div>

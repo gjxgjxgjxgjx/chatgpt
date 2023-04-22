@@ -221,6 +221,7 @@ export default function ChatBox(props) {
     console.log("点击了复制按钮");
     setPasteContent(text);
   }
+
   return (
     <>
       <div className={style.container}>

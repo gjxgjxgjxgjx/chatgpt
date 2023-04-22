@@ -98,9 +98,19 @@ function Comment({ comment, onCopyClick }) {
       <button
         ref={copyButtonRef}
         onClick={() => {
-          onCopyClick(comment.text);
+          // onCopyClick(comment.text);  //将内容放在输入框
         }}
       >
+        复制
+        <CopyOutlined />
+      </button>
+      <button
+        ref={copyButtonRef}
+        onClick={() => {
+          onCopyClick(comment.text); //将内容放在输入框
+        }}
+      >
+        复制到输入框
         <CopyOutlined />
       </button>
       <div className={comment.isMe ? styles.CommentRevese : styles.Comment}>

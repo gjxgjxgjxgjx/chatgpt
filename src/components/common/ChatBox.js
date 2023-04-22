@@ -146,7 +146,7 @@ export default function ChatBox(props) {
       isMe: false,
       isSystem: true,
       date: new Date(),
-      text: "好的！",
+      text: "",
       author: {
         name: "小星星",
         avatarUrl: "https://placekitten.com/g/64/64",

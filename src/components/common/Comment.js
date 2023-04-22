@@ -46,7 +46,7 @@ export function PreCode(props) {
       });
 
       clipboard.on("success", () => {
-        toast.success("已复制！");
+        // toast.success("已复制！");
       });
 
       clipboard.on("error", (e) => {
@@ -77,7 +77,7 @@ function Comment({ comment, onCopyClick }) {
       });
 
       clipboard.on("success", () => {
-        toast.success("已复制！");
+        // toast.success("已复制！");
       });
 
       clipboard.on("error", (e) => {

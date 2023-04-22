@@ -34,6 +34,7 @@
   right: 0;
   bottom: 10vh;
   overflow-y: scroll; /* 显示滚动条 */
+  padding-bottom: 10vh; /* 添加底部间距，以确保聊天记录始终可见 */
 }
 
 .ChatBox {
@@ -47,8 +48,9 @@
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 1px; /* 根据导航栏高度调整，留出足够的空间 */
-  height: 10vh; /* 输入框高度为 50px */
+  bottom: 1px;
+  /* min-height: 10vh; */
+  /* height: 10vh;  */
   flex-shrink: 0;
   max-width: 1000px;
   margin: 0 auto; /* 设置左右边距为自动，即可实现居中对齐 */

@@ -8,8 +8,11 @@ import RemarkGfm from "remark-gfm";
 import RehypeHighlight from "rehype-highlight";
 import { CopyOutlined } from "@ant-design/icons";
 CopyOutlined;
-import { useRef } from "react";
-import { Button } from "antd";
+import { useRef, useEffect } from "react";
+
+import ClipboardJS from "clipboard";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function formatDate(date) {
   const now = new Date();
@@ -34,63 +37,70 @@ function formatDate(date) {
 
 export function PreCode(props) {
   const ref = useRef(HTMLPreElement);
+  const copyButtonRef = useRef(null);
+
+  useEffect(() => {
+    if (copyButtonRef.current) {
+      const clipboard = new ClipboardJS(copyButtonRef.current, {
+        text: () => ref.current.innerText,
+      });
+
+      clipboard.on("success", () => {
+        toast.success("已复制！");
+      });
+
+      clipboard.on("error", (e) => {
+        toast.error("复制失败！");
+      });
+
+      return () => {
+        clipboard.destroy();
+      };
+    }
+  }, [ref]);
 
   return (
     <pre ref={ref}>
-      <button
-        className={styles.copyBottn}
-        onClick={() => {
-          if (ref.current) {
-            let code = ref.current.innerText;
-            copyToClipboard(code);
-          }
-        }}
-      ></button>
+      <button ref={copyButtonRef} className={styles.copyBottn}></button>
       {props.children}
     </pre>
   );
 }
 
-async function copyToClipboard(text) {
-  // 使用 navigator.clipboard.writeText，如果可用
-  if (
-    navigator.clipboard &&
-    typeof navigator.clipboard.writeText === "function"
-  ) {
-    try {
-      await navigator.clipboard.writeText(text);
-      console.log("Text copied to clipboard");
-    } catch (err) {
-      console.error("Failed to copy text: ", err);
-    }
-  } else {
-    // 降级到 document.execCommand('copy')，如果 navigator.clipboard 不可用
-    const textarea = document.createElement("textarea");
-    textarea.value = text;
-    textarea.style.position = "fixed"; // 避免在页面上滚动
-    document.body.appendChild(textarea);
-    textarea.focus();
-    textarea.select();
-
-    try {
-      const successful = document.execCommand("copy");
-      if (successful) {
-        console.log("Text copied to clipboard");
-      } else {
-        console.error("Failed to copy text");
-      }
-    } catch (err) {
-      console.error("Failed to copy text: ", err);
-    } finally {
-      document.body.removeChild(textarea);
-    }
-  }
-}
-
 function Comment({ comment, onCopyClick }) {
+  const copyButtonRef = useRef(null);
+
+  useEffect(() => {
+    if (copyButtonRef.current) {
+      const clipboard = new ClipboardJS(copyButtonRef.current, {
+        text: () => comment.text,
+      });
+
+      clipboard.on("success", () => {
+        toast.success("已复制！");
+      });
+
+      clipboard.on("error", (e) => {
+        toast.error("复制失败！");
+      });
+
+      return () => {
+        clipboard.destroy();
+      };
+    }
+  }, [comment]);
   return (
     <div>
-      <button onClick={() => onCopyClick(comment.text)}>
+      <ToastContainer
+        toastClassName={styles.centeredToastText}
+        hideProgressBar
+      />
+      <button
+        ref={copyButtonRef}
+        onClick={() => {
+          onCopyClick(comment.text);
+        }}
+      >
         <CopyOutlined />
       </button>
       <div className={comment.isMe ? styles.CommentRevese : styles.Comment}>
@@ -127,10 +137,6 @@ function Comment({ comment, onCopyClick }) {
             >
               {comment.text}
             </ReactMarkdown>
-            {/* <ReactMarkdown
-              children={comment.text}
-              remarkPlugins={[RemarkGfm]}
-            /> */}
           </div>
         </div>
       </div>

@@ -8,18 +8,20 @@
 }
 
 .InputBox textarea {
+  height: auto;
+  resize: none;
   flex: 1;
   margin-right: 10px;
   padding: 5px 10px;
   font-size: 14px;
   border: 1px solid #ccc;
-
   border-radius: 5px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-  resize: none;
 }
 
 .InputBox button {
+  height: auto;
+  resize: none;
   background-color: #4caf50;
   border: none;
   color: white;

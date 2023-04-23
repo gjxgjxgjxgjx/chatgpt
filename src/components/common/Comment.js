@@ -96,16 +96,18 @@ function Comment({ comment, onCopyClick }) {
         hideProgressBar
       />
       <button
+        className={styles.copyTextBottn}
         ref={copyButtonRef}
         onClick={() => {
-          // onCopyClick(comment.text);  //将内容放在输入框
+          // onCopyClick(comment.texcopyTextBottnt);  //将内容放在输入框
         }}
       >
         复制
         <CopyOutlined />
       </button>
       <button
-        ref={copyButtonRef}
+        className={styles.copyTextBottn}
+        // ref={copyButtonRef}
         onClick={() => {
           onCopyClick(comment.text); //将内容放在输入框
         }}

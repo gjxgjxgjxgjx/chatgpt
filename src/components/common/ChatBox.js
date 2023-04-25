@@ -162,7 +162,7 @@ export default function ChatBox(props) {
 
     const message = createMessage(
       inputValue,
-      comments.slice(1),
+      comments.slice(1).slice(-4),
       props.chatType
     );
 
